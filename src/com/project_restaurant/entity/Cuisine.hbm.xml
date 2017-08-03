@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.project_restaurant.entity.Cuisine" table="cuisine_type">
+        <id name="id" column="cuisine_id" type="integer">
+            <generator class="identity"></generator>
+        </id>
+        <property name="name" column="name" type="string"></property>
+
+        <set name="dishSet" inverse="true" cascade="all" fetch="select" lazy="true">
+            <key column="cuisine_id"></key>
+            <one-to-many   class="com.project_restaurant.entity.Dish"></one-to-many>
+        </set>
+    </class>
+</hibernate-mapping>

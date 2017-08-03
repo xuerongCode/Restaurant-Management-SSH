@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.project_restaurant.entity.MidOrderDish" table="dish_order">
+        <!--<id column="id" name="id">-->
+            <!--<generator-->
+                    <!--class="identity"-->
+            <!--&gt;</generator>-->
+        <!--</id>-->
+        <composite-id>
+            <key-many-to-one
+                    name="dish"
+                    column="dish_id"
+                    class="com.project_restaurant.entity.Dish"
+            ></key-many-to-one>
+            <key-many-to-one
+                    name="order"
+                    column="order_id"
+                    class="com.project_restaurant.entity.Order"
+            ></key-many-to-one>
+        </composite-id>
+        <property name="amount" column="amount" type="integer" not-null="true"></property>
+
+        <!--<many-to-one-->
+                <!--name="dish"-->
+                <!--column="dish_id"-->
+                <!--class="com.project_restaurant.entity.Dish"-->
+                <!--not-null="true"-->
+        <!--&gt;</many-to-one>-->
+
+        <!--<many-to-one-->
+                <!--name="order"-->
+                <!--column="order_id"-->
+                <!--class="com.project_restaurant.entity.Order"-->
+                <!--not-null="true"-->
+        <!--&gt;</many-to-one>-->
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/tx  http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+                            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+
+    <!--use C3P0-config.xml-->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" ></bean>
+
+
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">true</prop>
+                <prop key="current_session_context_class">thread</prop>
+            </props>
+        </property>
+        <property name="mappingLocations" value="classpath:com/project_restaurant/entity/*.hbm.xml"></property>
+    </bean>
+
+    <!--create template-->
+    <!--<bean id="hibernateTemplate" class="org.springframework.orm.hibernate5.HibernateTemplate">-->
+        <!--<property name="sessionFactory" ref="sessionFactory"></property>-->
+    <!--</bean>-->
+
+    <bean id="tableDao" class="com.project_restaurant.dao.impl.TableDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+
+    <bean id="cuisineDao" class="com.project_restaurant.dao.impl.CuisineDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+
+    <bean id="dishDao" class="com.project_restaurant.dao.impl.DishDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+
+    <bean id="orderDao" class="com.project_restaurant.dao.impl.OrderDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+
+    <bean id="tableService" class="com.project_restaurant.service.impl.TableServiceImpl">
+        <property name="tableDao" ref="tableDao"></property>
+    </bean>
+
+    <bean id="cuisineService" class="com.project_restaurant.service.impl.CuisineServiceImpl">
+        <property name="cuisineDao" ref="cuisineDao"></property>
+    </bean>
+
+    <bean id="dishService" class="com.project_restaurant.service.impl.DishServiceImpl">
+        <property name="dishDao" ref="dishDao"></property>
+    </bean>
+
+    <bean id="orderService" class="com.project_restaurant.service.impl.OrderServiceImpl">
+        <property name="orderDao" ref="orderDao"></property>
+    </bean>
+
+    <!--SpringTx-->
+    <bean id="txManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+
+    <tx:advice id="txAdvice" transaction-manager="txManager">
+        <tx:attributes>
+            <tx:method name="*" read-only="false" propagation="REQUIRED"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <aop:config>
+        <aop:advisor advice-ref="txAdvice" pointcut="execution(* com.project_restaurant.dao..*.*(..))"></aop:advisor>
+    </aop:config>
+
+
+</beans>

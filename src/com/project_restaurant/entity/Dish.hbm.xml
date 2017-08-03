@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.project_restaurant.entity.Dish" table="dish">
+        <id name="id" column="id">
+            <generator class="identity"></generator>
+        </id>
+
+        <property name="name" type="string" column="name"></property>
+        <property name="price" type="double" column="price"></property>
+        <property name="salePrice" type="double" column="sale_price"></property>
+        <property name="description" type="string" column="description"></property>
+        <property name="imgPath" type="string" column="imgPath"></property>
+
+        <many-to-one
+                name="cuisine"
+                foreign-key="fk_cuisine_dish"
+                column="cuisine_id"
+                class="com.project_restaurant.entity.Cuisine"
+                fetch="join"
+                not-null="true"
+        ></many-to-one>
+
+        <set name="midOrderDishSet" table="dish_order"  inverse="true" cascade="all" fetch="select" lazy="true">
+            <key column="dish_id"></key>
+            <one-to-many class="com.project_restaurant.entity.MidOrderDish"></one-to-many>
+        </set>
+
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class name="com.project_restaurant.entity.Order" table="t_order">
+    <id name="id" column="id">
+        <generator class="identity"></generator>
+    </id>
+    <property name="status" column="status">
+        <type name="org.hibernate.type.EnumType">
+            <param name="enumClass">com.project_restaurant.entity.OrderStatus</param>
+            <param name="useNamed">true</param>
+        </type>
+    </property>
+    <property name="placedDate" column="place_date" type="date"></property>
+    <property name="paidDate" column="paid_date" type="date"></property>
+    <property name="orderSummary" column="order_summary" type="double"></property>
+    <property name="totalQuantity" column="total_quantity" type="integer"></property>
+
+   <set name="midOrderDishSet" table="dish_order" inverse="true" cascade="all" fetch="select" lazy="true">
+       <key column="order_id"></key>
+       <one-to-many class="com.project_restaurant.entity.MidOrderDish"></one-to-many>
+   </set>
+
+    <many-to-one
+        name="table"
+        foreign-key="fk_table_order"
+        column="table_id"
+        class="com.project_restaurant.entity.Table"
+        fetch="join"
+    ></many-to-one>
+
+</class>
+</hibernate-mapping>
